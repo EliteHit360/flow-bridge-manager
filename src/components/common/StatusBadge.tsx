@@ -18,15 +18,19 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({
   showDot = true
 }) => {
   const statusClasses = {
-    success: "status-badge-success",
-    warning: "status-badge-warning",
-    error: "status-badge-error",
-    info: "status-badge-info",
+    success: "bg-success/10 text-success border border-success/20",
+    warning: "bg-warning/10 text-warning border border-warning/20",
+    error: "bg-destructive/10 text-destructive border border-destructive/20",
+    info: "bg-primary/10 text-primary border border-primary/20",
     neutral: "bg-muted text-muted-foreground border border-muted-foreground/30",
   };
 
   return (
-    <span className={cn("status-badge", statusClasses[status], className)}>
+    <span className={cn(
+      "inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium", 
+      statusClasses[status], 
+      className
+    )}>
       {showDot && (
         <span 
           className={cn(
