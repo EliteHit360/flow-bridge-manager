@@ -9,6 +9,8 @@ import Metrics from "./pages/Metrics";
 import Rules from "./pages/Rules";
 import Receiving from "./pages/Receiving";
 import Allocation from "./pages/Allocation";
+import Shipments from "./pages/Shipments";
+import Exceptions from "./pages/Exceptions";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -25,6 +27,9 @@ const App = () => (
           <Route path="/rules" element={<Rules />} />
           <Route path="/receiving" element={<Receiving />} />
           <Route path="/allocation" element={<Allocation />} />
+          <Route path="/shipments" element={<Shipments />} />
+          <Route path="/exceptions" element={<Exceptions />} />
+          <Route path="/reports" element={<NotFound />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
