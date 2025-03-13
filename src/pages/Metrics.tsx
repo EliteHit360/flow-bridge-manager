@@ -41,7 +41,7 @@ const Metrics = () => {
       <div className="flex-1 flex flex-col overflow-hidden">
         <Header username="Jasas Ataullah" />
         
-        <main className="flex-1 overflow-y-auto bg-secondary/50 p-6">
+        <main className="flex-1 overflow-y-auto bg-secondary/50 p-4 md:p-6 container mx-auto max-w-screen-2xl">
           <PageTitle 
             title="Performance Metrics" 
             subtitle="Monitor key metrics and performance indicators for flow-through operations"
@@ -52,16 +52,16 @@ const Metrics = () => {
           </div>
           
           {loading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 animate-pulse">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 animate-pulse">
               {[1, 2, 3, 4].map((i) => (
                 <div key={i} className="h-[140px] rounded-xl bg-card border"></div>
               ))}
-              <div className="h-[400px] rounded-xl bg-card border md:col-span-2"></div>
-              <div className="h-[400px] rounded-xl bg-card border md:col-span-2"></div>
+              <div className="h-[400px] rounded-xl bg-card border md:col-span-2 lg:col-span-2"></div>
+              <div className="h-[400px] rounded-xl bg-card border md:col-span-2 lg:col-span-2"></div>
             </div>
           ) : (
             <>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-6">
                 <MetricsCard
                   title="Flow-Through Rate"
                   value="78.2%"
@@ -102,7 +102,7 @@ const Metrics = () => {
                 </TabsList>
                 
                 <TabsContent value="charts" className="space-y-6">
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
                     <MetricsChart 
                       title="Flow-Through % by Category"
                       type="bar"
@@ -116,7 +116,7 @@ const Metrics = () => {
                     />
                   </div>
                   
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
                     <MetricsChart 
                       title="Fulfillment Accuracy by Store"
                       type="bar"
@@ -138,10 +138,10 @@ const Metrics = () => {
                 </TabsContent>
               </Tabs>
               
-              <div className="rounded-xl border bg-card shadow-sm p-6">
+              <div className="rounded-xl border bg-card shadow-sm p-4 md:p-6 mb-6">
                 <h3 className="text-lg font-medium mb-4">Performance Insights</h3>
                 
-                <div className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   <div className="p-4 border rounded-lg bg-muted/30">
                     <div className="flex items-start gap-3">
                       <div className="mt-0.5">

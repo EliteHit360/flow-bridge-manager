@@ -53,13 +53,13 @@ const MetricsChart: React.FC<MetricsChartProps> = ({
   }, []);
 
   return (
-    <div className={cn("p-6 rounded-xl border bg-card shadow-sm", className)}>
+    <div className={cn("p-4 md:p-6 rounded-xl border bg-card shadow-sm", className)}>
       <div className="mb-4">
         <h3 className="text-lg font-medium">{title}</h3>
         {subtitle && <p className="text-sm text-muted-foreground">{subtitle}</p>}
       </div>
       
-      <div className={cn(heightClass, "transition-opacity duration-500", !chartLoaded && "opacity-0")}>
+      <div className={cn(heightClass, "w-full transition-opacity duration-500", !chartLoaded && "opacity-0")}>
         <ChartContainer
           config={{
             value: { theme: { light: "#9c27b0", dark: "#d05ce3" } },
@@ -67,98 +67,100 @@ const MetricsChart: React.FC<MetricsChartProps> = ({
             avg: { theme: { light: "#e1bee7", dark: "#6a0080" } },
           }}
         >
-          <ResponsiveContainer width="100%" height="100%">
-            {type === 'bar' ? (
-              <BarChart
-                data={data}
-                margin={{ top: 10, right: 30, left: 0, bottom: 5 }}
-                barSize={20}
-                barGap={8}
-              >
-                <CartesianGrid strokeDasharray="3 3" vertical={false} opacity={0.3} />
-                <XAxis 
-                  dataKey="name" 
-                  tick={{ fontSize: 12 }} 
-                  axisLine={false} 
-                  tickLine={false}
-                />
-                <YAxis 
-                  tickFormatter={(value) => `${value}%`} 
-                  tick={{ fontSize: 12 }} 
-                  axisLine={false} 
-                  tickLine={false}
-                />
-                <ChartTooltip
-                  content={<ChartTooltipContent />}
-                />
-                <Legend 
-                  verticalAlign="top" 
-                  align="right"
-                  iconType="circle"
-                  iconSize={8}
-                  wrapperStyle={{ paddingBottom: '10px' }}
-                />
-                <Bar 
-                  dataKey="value" 
-                  name="Actual" 
-                  fill="var(--color-value)" 
-                  radius={[4, 4, 0, 0]} 
-                />
-                <Bar 
-                  dataKey="target" 
-                  name="Target" 
-                  fill="var(--color-target)" 
-                  radius={[4, 4, 0, 0]} 
-                />
-              </BarChart>
-            ) : (
-              <LineChart
-                data={data}
-                margin={{ top: 10, right: 30, left: 0, bottom: 5 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" vertical={false} opacity={0.3} />
-                <XAxis 
-                  dataKey="name" 
-                  tick={{ fontSize: 12 }} 
-                  axisLine={false} 
-                  tickLine={false}
-                />
-                <YAxis 
-                  tickFormatter={(value) => `${value}m`} 
-                  tick={{ fontSize: 12 }} 
-                  axisLine={false} 
-                  tickLine={false}
-                />
-                <ChartTooltip
-                  content={<ChartTooltipContent />}
-                />
-                <Legend 
-                  verticalAlign="top" 
-                  align="right"
-                  iconType="circle"
-                  iconSize={8}
-                  wrapperStyle={{ paddingBottom: '10px' }}
-                />
-                <Line 
-                  type="monotone" 
-                  dataKey="value" 
-                  name="Dwell Time" 
-                  stroke="var(--color-value)" 
-                  strokeWidth={2} 
-                  dot={{ r: 4 }} 
-                  activeDot={{ r: 6 }} 
-                />
-                <Line 
-                  type="monotone" 
-                  dataKey="avg" 
-                  name="Average" 
-                  stroke="var(--color-avg)" 
-                  strokeWidth={2} 
-                  strokeDasharray="5 5" 
-                />
-              </LineChart>
-            )}
-          </ResponsiveContainer>
+          {chartLoaded && (
+            <ResponsiveContainer width="100%" height="100%">
+              {type === 'bar' ? (
+                <BarChart
+                  data={data}
+                  margin={{ top: 10, right: 30, left: 0, bottom: 5 }}
+                  barSize={20}
+                  barGap={8}
+                >
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} opacity={0.3} />
+                  <XAxis 
+                    dataKey="name" 
+                    tick={{ fontSize: 12 }} 
+                    axisLine={false} 
+                    tickLine={false}
+                  />
+                  <YAxis 
+                    tickFormatter={(value) => `${value}%`} 
+                    tick={{ fontSize: 12 }} 
+                    axisLine={false} 
+                    tickLine={false}
+                  />
+                  <ChartTooltip
+                    content={<ChartTooltipContent />}
+                  />
+                  <Legend 
+                    verticalAlign="top" 
+                    align="right"
+                    iconType="circle"
+                    iconSize={8}
+                    wrapperStyle={{ paddingBottom: '10px' }}
+                  />
+                  <Bar 
+                    dataKey="value" 
+                    name="Actual" 
+                    fill="var(--color-value)" 
+                    radius={[4, 4, 0, 0]} 
+                  />
+                  <Bar 
+                    dataKey="target" 
+                    name="Target" 
+                    fill="var(--color-target)" 
+                    radius={[4, 4, 0, 0]} 
+                  />
+                </BarChart>
+              ) : (
+                <LineChart
+                  data={data}
+                  margin={{ top: 10, right: 30, left: 0, bottom: 5 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} opacity={0.3} />
+                  <XAxis 
+                    dataKey="name" 
+                    tick={{ fontSize: 12 }} 
+                    axisLine={false} 
+                    tickLine={false}
+                  />
+                  <YAxis 
+                    tickFormatter={(value) => `${value}m`} 
+                    tick={{ fontSize: 12 }} 
+                    axisLine={false} 
+                    tickLine={false}
+                  />
+                  <ChartTooltip
+                    content={<ChartTooltipContent />}
+                  />
+                  <Legend 
+                    verticalAlign="top" 
+                    align="right"
+                    iconType="circle"
+                    iconSize={8}
+                    wrapperStyle={{ paddingBottom: '10px' }}
+                  />
+                  <Line 
+                    type="monotone" 
+                    dataKey="value" 
+                    name="Dwell Time" 
+                    stroke="var(--color-value)" 
+                    strokeWidth={2} 
+                    dot={{ r: 4 }} 
+                    activeDot={{ r: 6 }} 
+                  />
+                  <Line 
+                    type="monotone" 
+                    dataKey="avg" 
+                    name="Average" 
+                    stroke="var(--color-avg)" 
+                    strokeWidth={2} 
+                    strokeDasharray="5 5" 
+                  />
+                </LineChart>
+              )}
+            </ResponsiveContainer>
+          )}
         </ChartContainer>
       </div>
     </div>
