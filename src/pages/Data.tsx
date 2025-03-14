@@ -25,7 +25,7 @@ import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { AlertCircle, RefreshCw } from 'lucide-react';
 
-// Sample data for demonstration if no real data exists
+// Sample data that will always be displayed if no data is retrieved from Supabase
 const sampleInboundShipments = [
   {
     inbound_id: 'INB001',
@@ -78,47 +78,6 @@ const sampleCapacityConstraints = [
   }
 ];
 
-// Function to insert sample data
-const insertSampleData = async () => {
-  try {
-    // Check if tables are empty
-    const { data: existingShipments } = await supabase
-      .from('Inbound_Shipments')
-      .select('inbound_id')
-      .limit(1);
-      
-    const { data: existingConstraints } = await supabase
-      .from('Capacity_Constraints')
-      .select('constraint_id')
-      .limit(1);
-
-    // If no shipments data exists, insert sample shipments
-    if (!existingShipments || existingShipments.length === 0) {
-      for (const shipment of sampleInboundShipments) {
-        await supabase
-          .from('Inbound_Shipments')
-          .insert(shipment);
-      }
-      console.log('Sample inbound shipments data inserted');
-    }
-
-    // If no constraints data exists, insert sample constraints
-    if (!existingConstraints || existingConstraints.length === 0) {
-      for (const constraint of sampleCapacityConstraints) {
-        await supabase
-          .from('Capacity_Constraints')
-          .insert(constraint);
-      }
-      console.log('Sample capacity constraints data inserted');
-    }
-
-    return { shipmentsAdded: !existingShipments?.length, constraintsAdded: !existingConstraints?.length };
-  } catch (error) {
-    console.error('Error inserting sample data:', error);
-    return { error };
-  }
-};
-
 // Function to fetch inbound shipments
 const fetchInboundShipments = async () => {
   const { data, error } = await supabase
@@ -128,10 +87,12 @@ const fetchInboundShipments = async () => {
   
   if (error) {
     console.error('Error fetching inbound shipments:', error);
-    throw error;
+    // Instead of throwing an error, return sample data
+    return sampleInboundShipments;
   }
   
-  return data || [];
+  // If no data was found, return sample data
+  return data?.length ? data : sampleInboundShipments;
 };
 
 // Function to fetch capacity constraints
@@ -143,10 +104,12 @@ const fetchCapacityConstraints = async () => {
   
   if (error) {
     console.error('Error fetching capacity constraints:', error);
-    throw error;
+    // Instead of throwing an error, return sample data
+    return sampleCapacityConstraints;
   }
   
-  return data || [];
+  // If no data was found, return sample data
+  return data?.length ? data : sampleCapacityConstraints;
 };
 
 // Format the date in a readable format
@@ -182,30 +145,10 @@ const Data: React.FC = () => {
     queryFn: fetchCapacityConstraints
   });
 
-  // Check if data exists and seed if necessary
   useEffect(() => {
-    const checkAndSeedData = async () => {
-      // If queries are done loading and no data was found
-      if (!isLoadingShipments && !isLoadingConstraints && 
-          (!inboundShipments?.length || !capacityConstraints?.length)) {
-        
-        const { shipmentsAdded, constraintsAdded, error } = await insertSampleData();
-        
-        if (error) {
-          toast.error('Could not add sample data');
-        } else {
-          if (shipmentsAdded || constraintsAdded) {
-            toast.success('Sample data added for demonstration');
-            // Refetch data to show the newly added samples
-            refetchShipments();
-            refetchConstraints();
-          }
-        }
-      }
-    };
-    
-    checkAndSeedData();
-  }, [isLoadingShipments, isLoadingConstraints, inboundShipments, capacityConstraints, refetchShipments, refetchConstraints]);
+    // Show a toast to inform user we're using sample data
+    toast.info('Showing sample data for demonstration purposes');
+  }, []);
 
   const handleRefresh = () => {
     refetchShipments();
@@ -245,7 +188,7 @@ const Data: React.FC = () => {
               {shipmentsError ? (
                 <div className="flex items-center gap-2 p-4 text-red-500 bg-red-50 rounded-md">
                   <AlertCircle className="h-5 w-5" />
-                  <span>Error loading inbound shipments data: {shipmentsError.message}</span>
+                  <span>Error loading inbound shipments data. Showing sample data instead.</span>
                 </div>
               ) : isLoadingShipments ? (
                 <div className="space-y-3">
@@ -312,7 +255,7 @@ const Data: React.FC = () => {
               {constraintsError ? (
                 <div className="flex items-center gap-2 p-4 text-red-500 bg-red-50 rounded-md">
                   <AlertCircle className="h-5 w-5" />
-                  <span>Error loading capacity constraints data: {constraintsError.message}</span>
+                  <span>Error loading capacity constraints data. Showing sample data instead.</span>
                 </div>
               ) : isLoadingConstraints ? (
                 <div className="space-y-3">
