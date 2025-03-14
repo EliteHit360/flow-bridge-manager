@@ -25,7 +25,7 @@ import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { AlertCircle, RefreshCw } from 'lucide-react';
 
-// Sample data that will always be displayed if no data is retrieved from Supabase
+// Sample data as fallback if Supabase returns empty results
 const sampleInboundShipments = [
   {
     inbound_id: 'INB001',
@@ -80,36 +80,44 @@ const sampleCapacityConstraints = [
 
 // Function to fetch inbound shipments
 const fetchInboundShipments = async () => {
-  const { data, error } = await supabase
-    .from('Inbound_Shipments')
-    .select('*')
-    .order('date_created', { ascending: false });
-  
-  if (error) {
-    console.error('Error fetching inbound shipments:', error);
-    // Instead of throwing an error, return sample data
-    return sampleInboundShipments;
+  try {
+    const { data, error } = await supabase
+      .from('Inbound_Shipments')
+      .select('*')
+      .order('date_created', { ascending: false });
+    
+    if (error) {
+      console.error('Error fetching inbound shipments:', error);
+      throw error;
+    }
+    
+    // Return the fetched data or empty array if null
+    return data || [];
+  } catch (error) {
+    console.error('Failed to fetch inbound shipments:', error);
+    throw error;
   }
-  
-  // If no data was found, return sample data
-  return data?.length ? data : sampleInboundShipments;
 };
 
 // Function to fetch capacity constraints
 const fetchCapacityConstraints = async () => {
-  const { data, error } = await supabase
-    .from('Capacity_Constraints')
-    .select('*')
-    .order('date_effective', { ascending: false });
-  
-  if (error) {
-    console.error('Error fetching capacity constraints:', error);
-    // Instead of throwing an error, return sample data
-    return sampleCapacityConstraints;
+  try {
+    const { data, error } = await supabase
+      .from('Capacity_Constraints')
+      .select('*')
+      .order('date_effective', { ascending: false });
+    
+    if (error) {
+      console.error('Error fetching capacity constraints:', error);
+      throw error;
+    }
+    
+    // Return the fetched data or empty array if null
+    return data || [];
+  } catch (error) {
+    console.error('Failed to fetch capacity constraints:', error);
+    throw error;
   }
-  
-  // If no data was found, return sample data
-  return data?.length ? data : sampleCapacityConstraints;
 };
 
 // Format the date in a readable format
@@ -146,9 +154,11 @@ const Data: React.FC = () => {
   });
 
   useEffect(() => {
-    // Show a toast to inform user we're using sample data
-    toast.info('Showing sample data for demonstration purposes');
-  }, []);
+    // Check if there's data from Supabase
+    if (inboundShipments?.length || capacityConstraints?.length) {
+      toast.success('Successfully loaded data from Supabase');
+    }
+  }, [inboundShipments, capacityConstraints]);
 
   const handleRefresh = () => {
     refetchShipments();
@@ -188,7 +198,7 @@ const Data: React.FC = () => {
               {shipmentsError ? (
                 <div className="flex items-center gap-2 p-4 text-red-500 bg-red-50 rounded-md">
                   <AlertCircle className="h-5 w-5" />
-                  <span>Error loading inbound shipments data. Showing sample data instead.</span>
+                  <span>Error loading inbound shipments data: {(shipmentsError as Error).message}</span>
                 </div>
               ) : isLoadingShipments ? (
                 <div className="space-y-3">
@@ -255,7 +265,7 @@ const Data: React.FC = () => {
               {constraintsError ? (
                 <div className="flex items-center gap-2 p-4 text-red-500 bg-red-50 rounded-md">
                   <AlertCircle className="h-5 w-5" />
-                  <span>Error loading capacity constraints data. Showing sample data instead.</span>
+                  <span>Error loading capacity constraints data: {(constraintsError as Error).message}</span>
                 </div>
               ) : isLoadingConstraints ? (
                 <div className="space-y-3">
