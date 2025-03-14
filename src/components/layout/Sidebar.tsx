@@ -9,7 +9,8 @@ import {
   AlertCircle, 
   Home,
   PackageCheck,
-  Gauge
+  Gauge,
+  Database
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -47,6 +48,7 @@ const Sidebar: React.FC = () => {
     { icon: <PackageCheck />, label: "Allocation", to: "/allocation" },
     { icon: <TruckIcon />, label: "Shipments", to: "/shipments" },
     { icon: <AlertCircle />, label: "Exceptions", to: "/exceptions" },
+    { icon: <Database />, label: "Data", to: "/data" }, // Add new data link
     { icon: <BarChart3 />, label: "Reports", to: "/reports" },
   ];
 
