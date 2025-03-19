@@ -75,6 +75,12 @@ const formatDate = (dateString: string | null) => {
   });
 };
 
+// Calculate total quantity (quantity * priority_level)
+const calculateTotalQuantity = (quantity: number | null, priorityLevel: number | null) => {
+  if (!quantity || !priorityLevel) return 'N/A';
+  return quantity * priorityLevel;
+};
+
 const RawData: React.FC = () => {
   // Query for SKU Master data
   const { 
@@ -225,11 +231,12 @@ const RawData: React.FC = () => {
                         <TableHead>Order ID</TableHead>
                         <TableHead>SKU</TableHead>
                         <TableHead>Quantity</TableHead>
+                        <TableHead>Priority</TableHead>
+                        <TableHead>Total Quantity</TableHead>
                         <TableHead>Created</TableHead>
                         <TableHead>Due Date</TableHead>
                         <TableHead>To Location</TableHead>
                         <TableHead>Status</TableHead>
-                        <TableHead>Priority</TableHead>
                         <TableHead>Flow Eligible</TableHead>
                       </TableRow>
                     </TableHeader>
@@ -240,17 +247,18 @@ const RawData: React.FC = () => {
                             <TableCell className="font-medium">{order.order_id}</TableCell>
                             <TableCell>{order.sku_code || 'N/A'}</TableCell>
                             <TableCell>{order.quantity || 'N/A'}</TableCell>
+                            <TableCell>{order.priority_level || 'N/A'}</TableCell>
+                            <TableCell>{calculateTotalQuantity(order.quantity, order.priority_level)}</TableCell>
                             <TableCell>{formatDate(order.date_created)}</TableCell>
                             <TableCell>{formatDate(order.due_date)}</TableCell>
                             <TableCell>{order.location_to || 'N/A'}</TableCell>
                             <TableCell>{order.status || 'N/A'}</TableCell>
-                            <TableCell>{order.priority_level || 'N/A'}</TableCell>
                             <TableCell>{order.flow_eligible ? 'Yes' : 'No'}</TableCell>
                           </TableRow>
                         ))
                       ) : (
                         <TableRow>
-                          <TableCell colSpan={9} className="text-center py-6 text-muted-foreground">
+                          <TableCell colSpan={10} className="text-center py-6 text-muted-foreground">
                             No store orders found
                           </TableCell>
                         </TableRow>
