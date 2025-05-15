@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { 
   TruckIcon, 
@@ -15,8 +14,7 @@ import MetricsCard from '@/components/dashboard/MetricsCard';
 import StatusBadge from '@/components/common/StatusBadge';
 import FlowThroughPercentage from '@/components/dashboard/FlowThroughPercentage';
 import AllocationChart from '@/components/dashboard/AllocationChart';
-import Header from '@/components/layout/Header';
-import Sidebar from '@/components/layout/Sidebar';
+import PageLayout from '@/components/layout/PageLayout';
 
 const Dashboard = () => {
   const [loading, setLoading] = useState(true);
@@ -92,203 +90,195 @@ const Dashboard = () => {
   ];
 
   return (
-    <div className="flex h-screen overflow-hidden">
-      <Sidebar />
+    <PageLayout>
+      <PageTitle 
+        title="Flow-Through Dashboard" 
+        subtitle="Monitor real-time cross-docking operations and key metrics"
+      />
       
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <Header username="Jasas Ataullah" />
-        
-        <main className="flex-1 overflow-y-auto bg-secondary/50 p-6">
-          <PageTitle 
-            title="Flow-Through Dashboard" 
-            subtitle="Monitor real-time cross-docking operations and key metrics"
-          />
+      {loading ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 animate-pulse">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="h-[140px] rounded-xl bg-card border"></div>
+          ))}
+          <div className="h-[400px] rounded-xl bg-card border md:col-span-2"></div>
+          <div className="h-[400px] rounded-xl bg-card border md:col-span-2"></div>
+        </div>
+      ) : (
+        <>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+            <MetricsCard
+              title="Flow-Through Rate"
+              value="78%"
+              icon={<ArrowDownToLine className="h-5 w-5" />}
+              change={{ value: 3.2, type: 'increase' }}
+              subtitle="Overall today"
+            />
+            
+            <MetricsCard
+              title="Avg. Dwell Time"
+              value="42 min"
+              icon={<Clock className="h-5 w-5" />}
+              change={{ value: 12, type: 'decrease' }}
+              subtitle="From receiving to outbound"
+            />
+            
+            <MetricsCard
+              title="Open Exceptions"
+              value="7"
+              icon={<AlertTriangle className="h-5 w-5" />}
+              change={{ value: 2, type: 'increase' }}
+              subtitle="Requires attention"
+              className="border-warning/20"
+            />
+            
+            <MetricsCard
+              title="Active Shipments"
+              value="12"
+              icon={<TruckIcon className="h-5 w-5" />}
+              change={{ value: 0, type: 'neutral' }}
+              subtitle="Inbound & outbound"
+            />
+          </div>
           
-          {loading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 animate-pulse">
-              {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="h-[140px] rounded-xl bg-card border"></div>
-              ))}
-              <div className="h-[400px] rounded-xl bg-card border md:col-span-2"></div>
-              <div className="h-[400px] rounded-xl bg-card border md:col-span-2"></div>
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 mb-6">
+            <div className="lg:col-span-3 grid grid-cols-1 gap-6">
+              <AllocationChart />
             </div>
-          ) : (
-            <>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-                <MetricsCard
-                  title="Flow-Through Rate"
-                  value="78%"
-                  icon={<ArrowDownToLine className="h-5 w-5" />}
-                  change={{ value: 3.2, type: 'increase' }}
-                  subtitle="Overall today"
-                />
+            
+            <div className="lg:col-span-2 grid grid-cols-1 gap-6">
+              <div className="p-6 rounded-xl border bg-card shadow-sm h-full flex flex-col">
+                <h3 className="text-lg font-medium mb-4">Current Performance</h3>
                 
-                <MetricsCard
-                  title="Avg. Dwell Time"
-                  value="42 min"
-                  icon={<Clock className="h-5 w-5" />}
-                  change={{ value: 12, type: 'decrease' }}
-                  subtitle="From receiving to outbound"
-                />
-                
-                <MetricsCard
-                  title="Open Exceptions"
-                  value="7"
-                  icon={<AlertTriangle className="h-5 w-5" />}
-                  change={{ value: 2, type: 'increase' }}
-                  subtitle="Requires attention"
-                  className="border-warning/20"
-                />
-                
-                <MetricsCard
-                  title="Active Shipments"
-                  value="12"
-                  icon={<TruckIcon className="h-5 w-5" />}
-                  change={{ value: 0, type: 'neutral' }}
-                  subtitle="Inbound & outbound"
-                />
-              </div>
-              
-              <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 mb-6">
-                <div className="lg:col-span-3 grid grid-cols-1 gap-6">
-                  <AllocationChart />
+                <div className="flex-1 flex items-center justify-center">
+                  <FlowThroughPercentage percentage={78} size="lg" />
                 </div>
                 
-                <div className="lg:col-span-2 grid grid-cols-1 gap-6">
-                  <div className="p-6 rounded-xl border bg-card shadow-sm h-full flex flex-col">
-                    <h3 className="text-lg font-medium mb-4">Current Performance</h3>
-                    
-                    <div className="flex-1 flex items-center justify-center">
-                      <FlowThroughPercentage percentage={78} size="lg" />
-                    </div>
-                    
-                    <div className="mt-4 grid grid-cols-2 gap-4">
-                      <div className="rounded-lg bg-muted p-3">
-                        <p className="text-xs text-muted-foreground">Allocation Accuracy</p>
-                        <p className="text-lg font-semibold">95.2%</p>
+                <div className="mt-4 grid grid-cols-2 gap-4">
+                  <div className="rounded-lg bg-muted p-3">
+                    <p className="text-xs text-muted-foreground">Allocation Accuracy</p>
+                    <p className="text-lg font-semibold">95.2%</p>
+                  </div>
+                  
+                  <div className="rounded-lg bg-muted p-3">
+                    <p className="text-xs text-muted-foreground">Truck Utilization</p>
+                    <p className="text-lg font-semibold">87.5%</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="rounded-xl border bg-card shadow-sm overflow-hidden">
+              <div className="p-6 border-b">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-lg font-medium">Recent Activity</h3>
+                  <button className="text-sm text-primary hover:underline">View All</button>
+                </div>
+              </div>
+              
+              <div className="divide-y">
+                {recentActivities.map((activity) => (
+                  <div key={activity.id} className="p-4 hover:bg-muted/30 transition-colors">
+                    <div className="flex">
+                      <div className="mr-4">
+                        {activity.type === 'inbound' && (
+                          <div className="h-10 w-10 rounded-full bg-success/10 flex-center text-success">
+                            <ArrowDownToLine className="h-5 w-5" />
+                          </div>
+                        )}
+                        {activity.type === 'outbound' && (
+                          <div className="h-10 w-10 rounded-full bg-primary/10 flex-center text-primary">
+                            <ArrowUpFromLine className="h-5 w-5" />
+                          </div>
+                        )}
+                        {activity.type === 'allocation' && (
+                          <div className="h-10 w-10 rounded-full bg-secondary flex-center text-foreground">
+                            <Package className="h-5 w-5" />
+                          </div>
+                        )}
+                        {activity.type === 'exception' && (
+                          <div className="h-10 w-10 rounded-full bg-warning/10 flex-center text-warning">
+                            <AlertTriangle className="h-5 w-5" />
+                          </div>
+                        )}
                       </div>
                       
-                      <div className="rounded-lg bg-muted p-3">
-                        <p className="text-xs text-muted-foreground">Truck Utilization</p>
-                        <p className="text-lg font-semibold">87.5%</p>
+                      <div className="flex-1">
+                        <div className="flex items-center justify-between">
+                          <h4 className="font-medium">{activity.title}</h4>
+                          <StatusBadge status={activity.status} label={activity.time} showDot={false} />
+                        </div>
+                        <p className="text-sm text-muted-foreground mt-1">{activity.description}</p>
                       </div>
                     </div>
                   </div>
+                ))}
+              </div>
+            </div>
+            
+            <div className="rounded-xl border bg-card shadow-sm overflow-hidden">
+              <div className="p-6 border-b">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-lg font-medium">Upcoming Inbound Shipments</h3>
+                  <button className="text-sm text-primary hover:underline">View Schedule</button>
                 </div>
               </div>
               
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div className="rounded-xl border bg-card shadow-sm overflow-hidden">
-                  <div className="p-6 border-b">
-                    <div className="flex items-center justify-between">
-                      <h3 className="text-lg font-medium">Recent Activity</h3>
-                      <button className="text-sm text-primary hover:underline">View All</button>
-                    </div>
-                  </div>
-                  
-                  <div className="divide-y">
-                    {recentActivities.map((activity) => (
-                      <div key={activity.id} className="p-4 hover:bg-muted/30 transition-colors">
-                        <div className="flex">
-                          <div className="mr-4">
-                            {activity.type === 'inbound' && (
-                              <div className="h-10 w-10 rounded-full bg-success/10 flex-center text-success">
-                                <ArrowDownToLine className="h-5 w-5" />
-                              </div>
-                            )}
-                            {activity.type === 'outbound' && (
-                              <div className="h-10 w-10 rounded-full bg-primary/10 flex-center text-primary">
-                                <ArrowUpFromLine className="h-5 w-5" />
-                              </div>
-                            )}
-                            {activity.type === 'allocation' && (
-                              <div className="h-10 w-10 rounded-full bg-secondary flex-center text-foreground">
-                                <Package className="h-5 w-5" />
-                              </div>
-                            )}
-                            {activity.type === 'exception' && (
-                              <div className="h-10 w-10 rounded-full bg-warning/10 flex-center text-warning">
-                                <AlertTriangle className="h-5 w-5" />
-                              </div>
-                            )}
-                          </div>
-                          
-                          <div className="flex-1">
-                            <div className="flex items-center justify-between">
-                              <h4 className="font-medium">{activity.title}</h4>
-                              <StatusBadge status={activity.status} label={activity.time} showDot={false} />
-                            </div>
-                            <p className="text-sm text-muted-foreground mt-1">{activity.description}</p>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                
-                <div className="rounded-xl border bg-card shadow-sm overflow-hidden">
-                  <div className="p-6 border-b">
-                    <div className="flex items-center justify-between">
-                      <h3 className="text-lg font-medium">Upcoming Inbound Shipments</h3>
-                      <button className="text-sm text-primary hover:underline">View Schedule</button>
-                    </div>
-                  </div>
-                  
-                  <div className="p-4">
-                    <div className="rounded-lg border overflow-hidden">
-                      <table className="min-w-full divide-y">
-                        <thead className="bg-muted/50">
-                          <tr>
-                            <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                              Shipment ID
-                            </th>
-                            <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                              Supplier
-                            </th>
-                            <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                              Expected
-                            </th>
-                            <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                              Status
-                            </th>
-                          </tr>
-                        </thead>
-                        <tbody className="bg-white divide-y">
-                          {upcomingShipments.map((shipment) => (
-                            <tr key={shipment.id} className="hover:bg-muted/30 transition-colors">
-                              <td className="px-4 py-3 whitespace-nowrap text-sm">
-                                <div className="font-medium">{shipment.id}</div>
-                                <div className="text-xs text-muted-foreground">{shipment.items} items</div>
-                              </td>
-                              <td className="px-4 py-3 whitespace-nowrap text-sm">
-                                {shipment.supplier}
-                              </td>
-                              <td className="px-4 py-3 whitespace-nowrap text-sm">
-                                {shipment.expectedTime}
-                              </td>
-                              <td className="px-4 py-3 whitespace-nowrap text-sm">
-                                <StatusBadge 
-                                  status={
-                                    shipment.status === 'In Transit' ? 'info' : 
-                                    shipment.status === 'Delayed' ? 'warning' : 
-                                    'success'
-                                  } 
-                                  label={shipment.status} 
-                                />
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
+              <div className="p-4">
+                <div className="rounded-lg border overflow-hidden">
+                  <table className="min-w-full divide-y">
+                    <thead className="bg-muted/50">
+                      <tr>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                          Shipment ID
+                        </th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                          Supplier
+                        </th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                          Expected
+                        </th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                          Status
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y">
+                      {upcomingShipments.map((shipment) => (
+                        <tr key={shipment.id} className="hover:bg-muted/30 transition-colors">
+                          <td className="px-4 py-3 whitespace-nowrap text-sm">
+                            <div className="font-medium">{shipment.id}</div>
+                            <div className="text-xs text-muted-foreground">{shipment.items} items</div>
+                          </td>
+                          <td className="px-4 py-3 whitespace-nowrap text-sm">
+                            {shipment.supplier}
+                          </td>
+                          <td className="px-4 py-3 whitespace-nowrap text-sm">
+                            {shipment.expectedTime}
+                          </td>
+                          <td className="px-4 py-3 whitespace-nowrap text-sm">
+                            <StatusBadge 
+                              status={
+                                shipment.status === 'In Transit' ? 'info' : 
+                                shipment.status === 'Delayed' ? 'warning' : 
+                                'success'
+                              } 
+                              label={shipment.status} 
+                            />
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
               </div>
-            </>
-          )}
-        </main>
-      </div>
-    </div>
+            </div>
+          </div>
+        </>
+      )}
+    </PageLayout>
   );
 };
 
